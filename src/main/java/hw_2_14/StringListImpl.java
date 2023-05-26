@@ -22,6 +22,8 @@ public class StringListImpl implements StringList {
     @Override
     public String add(String item) {
 
+        validateItem(item);
+
         if (size == list.length) {
             list = grow();
         }
@@ -34,38 +36,40 @@ public class StringListImpl implements StringList {
     public String add(int index, String item){
 
         final int s = list.length;
-        if (index >= s)
-            throw new StringArrayOutOfBoundsExeption();
-        else if (index >= size) {
-            throw new StringListOutOfSizeExeption();
-        } else {
-            if (size == s) {
-                list = grow();
-            }
-            System.arraycopy(list, index,
-                    list, index + 1,
-                    size - index);
-            list[index] = item;
-            size++;
-            return item;
-        }
+
+        validateItem(item);
+        validateIndex(index);
+
+        if (size == s) list = grow();
+
+        System.arraycopy(list, index,
+                list, index + 1,
+                size - index);
+
+        list[index] = item;
+        size++;
+
+        return item;
     }
 
     @Override
     public String set(int index, String item){
-        final int s = list.length;
-        if (index >= s)
-            throw new StringArrayOutOfBoundsExeption();
-        else if (index >= size) {
-            throw new StringListOutOfSizeExeption();
-        } else {
-            list[index] = item;
-            return item;
-        }
+
+        validateItem(item);
+        validateIndex(index);
+
+        list[index] = item;
+
+        return item;
+
     }
     @Override
     public String remove(String item){
+
         String oldValue = null;
+
+        validateItem(item);
+
         for (int i = 0; i < size; i++) {
             if (list[i].equals(item)) {
                 oldValue = list[i];
@@ -80,23 +84,20 @@ public class StringListImpl implements StringList {
         }
         return oldValue;
     }
-
     @Override
     public String remove(int index){
-        String oldValue = null;
-        final int s = list.length;
-        if (index >= s)
-            throw new StringArrayOutOfBoundsExeption();
-        else if (index >= size) {
-            throw new StringListOutOfSizeExeption();
-        } else {
-            oldValue = list[index];
-            System.arraycopy(list, index+1,
-                    list, index,
-                    list.length - index-1);
-            --size;
-            return oldValue;
-        }
+
+        String oldValue;
+
+        validateIndex(index);
+
+        oldValue = list[index];
+        System.arraycopy(list, index+1,
+                list, index,
+                list.length - index-1);
+        --size;
+
+        return oldValue;
     }
     @Override
     public boolean equals(StringList otherList){
@@ -130,7 +131,11 @@ public class StringListImpl implements StringList {
     }
     @Override
     public boolean contains(String item){
+
         boolean result = false;
+
+        validateItem(item);
+
         for (int i = 0; i < size; i++) {
             if (list[i].equals(item)) {
                 result = true;
@@ -141,7 +146,11 @@ public class StringListImpl implements StringList {
     }
     @Override
     public int indexOf(String item){
+
         int result = 0;
+
+        validateItem(item);
+
         for (int i = 0; i < size; i++) {
             if (list[i].equals(item)) {
                 result = i;
@@ -154,7 +163,11 @@ public class StringListImpl implements StringList {
     }
     @Override
     public int lastIndexOf(String item){
+
         int result = 99;
+
+        validateItem(item);
+
         for (int i = size-1; i > 0; i--) {
             if (list[i].equals(item)) {
                 result = i;
@@ -167,16 +180,11 @@ public class StringListImpl implements StringList {
     }
     @Override
     public String get(int index){
-        final int s = list.length;
-        if (index >= s)
-            throw new StringArrayOutOfBoundsExeption();
-        else if (index >= size) {
-            throw new StringListOutOfSizeExeption();
-        } else {
-            return list[index];
-        }
-    }
 
+        validateIndex(index);
+
+        return list[index];
+    }
     @Override
     public void clear(){
         if (size != 0) {
@@ -184,7 +192,6 @@ public class StringListImpl implements StringList {
                 list[i] = null;
             }
         }
-
     }
     @Override
     public String[] toArray() {
@@ -218,6 +225,18 @@ public class StringListImpl implements StringList {
         return (minCapacity > MAX_ARRAY_SIZE)
                 ? Integer.MAX_VALUE
                 : MAX_ARRAY_SIZE;
+    }
+    private void validateItem(String item){
+        if (item == null) {
+            throw new NullItemExeption();
+        }
+    }
+    private void validateIndex(int index) {
+        if (index >= list.length)
+            throw new StringArrayOutOfBoundsExeption();
+        else if (index >= size) {
+            throw new StringListOutOfSizeExeption();
+        }
     }
 
 }

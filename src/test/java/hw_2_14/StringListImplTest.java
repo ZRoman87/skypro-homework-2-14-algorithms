@@ -30,12 +30,6 @@ public class StringListImplTest {
         OUT_TO_STRING = "[00, 01, 02, null, null]";
         OUT_TO_ARRAY = "[00, 01, 02]";
         OUT_NULL_STRING = "[null, null, null, null, null]";
-
-        System.out.println("AFTER setUp");
-        System.out.println(out);
-        System.out.println(out.size());
-        System.out.println(otherList);
-        System.out.println(otherList.size());
     }
 
     @Test
